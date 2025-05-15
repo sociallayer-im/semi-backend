@@ -28,5 +28,8 @@ module Semi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # Ensure lib/ is eager loaded for custom libraries like tsid.rb
+    config.eager_load_paths << Rails.root.join('lib')
   end
 end
