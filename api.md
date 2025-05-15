@@ -52,7 +52,7 @@ Signs in a user using phone and verification code. Creates a user if not exists.
   "result": "ok",
   "auth_token": "string",
   "phone": "string",
-  "id": integer,
+  "id": "string",
   "address_type": "phone"
 }
 ```
@@ -68,7 +68,7 @@ Sets the user's handle (username).
 - `Authorization: Bearer <auth_token>`
 
 **Parameters:**
-- `id` (integer, required): The user's ID.
+- `id` (string, required): The user's ID.
 - `handle` (string, required): The new handle.
 
 **Response:**
@@ -89,7 +89,7 @@ Sets the user's image URL.
 - `Authorization: Bearer <auth_token>`
 
 **Parameters:**
-- `id` (integer, required): The user's ID.
+- `id` (string, required): The user's ID.
 - `image_url` (string, required): The new image URL.
 
 **Response:**
@@ -110,7 +110,7 @@ Sets the user's encrypted keys.
 - `Authorization: Bearer <auth_token>`
 
 **Parameters:**
-- `id` (integer, required): The user's ID.
+- `id` (string, required): The user's ID.
 - `encrypted_keys` (string, required): The encrypted keys.
 
 **Response:**
@@ -131,7 +131,7 @@ Retrieves the user's encrypted keys.
 - `Authorization: Bearer <auth_token>`
 
 **Parameters:**
-- `id` (integer, required): The user's ID.
+- `id` (string, required): The user's ID.
 
 **Response:**
 ```json
@@ -149,12 +149,12 @@ Retrieves the user's encrypted keys.
 Retrieves user information.
 
 **Parameters:**
-- `id` (integer, required): The user's ID.
+- `id` (string, required): The user's ID.
 
 **Response:**
 ```json
 {
-  "id": integer,
+  "id": "string",
   "handle": "string or null",
   "email": "string or null",
   "phone": "string",
