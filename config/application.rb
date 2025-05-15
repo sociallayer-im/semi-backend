@@ -31,5 +31,13 @@ module Semi
 
     # Ensure lib/ is eager loaded for custom libraries like tsid.rb
     config.eager_load_paths << Rails.root.join('lib')
+
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      end
+    end
   end
 end
