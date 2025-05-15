@@ -10,19 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_15_120000) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_15_122000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "auth_tokens", force: :cascade do |t|
+    t.string "token", null: false
+    t.string "user_id", null: false
+    t.boolean "disabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_auth_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_auth_tokens_on_user_id"
+  end
 
   create_table "users", id: :string, force: :cascade do |t|
     t.string "handle"
     t.string "email"
     t.string "phone"
     t.string "image_url"
+    t.jsonb "encrypted_keys"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["handle"], name: "index_users_on_handle", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
+
+  create_table "verification_tokens", force: :cascade do |t|
+    t.string "context", null: false
+    t.string "sent_to", null: false
+    t.string "code", null: false
+    t.datetime "expires_at", null: false
+    t.boolean "used", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "auth_tokens", "users"
 end

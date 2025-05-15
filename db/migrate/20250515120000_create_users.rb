@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :email
       t.string :phone
       t.string :image_url
+      t.jsonb :encrypted_keys
 
       t.timestamps
     end
