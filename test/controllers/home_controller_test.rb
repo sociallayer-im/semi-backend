@@ -52,6 +52,13 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert JSON.parse(@response.body).key?("encrypted_keys")
   end
 
+  test "should set evm chain address" do
+    user = User.create(phone: "1234567890")
+    post set_evm_chain_address_url, params: { id: user.id, evm_chain_address: "0x1234567890", evm_chain_active_key: "0x1234567890" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+  end
+
   test "should get user" do
     user = User.create(phone: "1234567890")
     get get_user_url, params: { id: user.id }

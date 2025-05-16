@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get  "get_user" => "home#get_user"
   get  "get_encrypted_keys" => "home#get_encrypted_keys"
   post "set_encrypted_keys" => "home#set_encrypted_keys"
+  post "set_evm_chain_address" => "home#set_evm_chain_address"
 
 
   # Defines the root path route ("/")

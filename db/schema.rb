@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_15_122000) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_081507) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_15_122000) do
     t.jsonb "encrypted_keys"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "evm_chain_address"
+    t.string "evm_chain_active_key"
+    t.integer "remaining_gas_credits", default: 0, null: false
+    t.integer "total_used_gas_credits", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["handle"], name: "index_users_on_handle", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true

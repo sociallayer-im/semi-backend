@@ -164,6 +164,23 @@ Retrieves user information.
 
 ---
 
+## 9. `POST /set_evm_chain_address`
+**Description:**
+Sets the user's EVM chain address.
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+**Parameters:**
+- `id` (string, required): The user's ID.
+- `evm_chain_address` (string, required): evm chain contract address
+- `evm_chain_active_key` (string, required): evm chain active_key.
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+
 **Note:**
 - Endpoints that modify user data require a valid `Authorization` header with a Bearer token.
 - Error responses will be in the form:
