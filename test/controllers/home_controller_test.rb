@@ -66,4 +66,18 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert JSON.parse(@response.body)["phone"] == "1234567890"
   end
 
+  test "should get me" do
+    user = User.create(phone: "1234567890")
+    get get_me_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("id")
+    assert JSON.parse(@response.body).key?("handle")
+    assert JSON.parse(@response.body).key?("email")
+    assert JSON.parse(@response.body).key?("phone")
+    assert JSON.parse(@response.body).key?("image_url")
+    assert JSON.parse(@response.body).key?("evm_chain_address")
+    assert JSON.parse(@response.body).key?("evm_chain_active_key")
+    assert JSON.parse(@response.body).key?("remaining_gas_credits")
+  end
+
 end
