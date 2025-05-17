@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   end
 
   def send_sms
-    code = rand(10_000..100_000)
+    code = rand(100_000..999_999)
     phone = params[:phone]
     VerificationToken.create(context: "phone-login", sent_to: phone, code: code, expires_at: Time.now + 15.minutes)
     if ENV["SMS_ENABLED"] == "ENABLED"
@@ -97,6 +97,13 @@ class HomeController < ApplicationController
     raise AppError.new("User Not Found") unless user
 
     render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits])
+  end
+
+  def get_me
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits, encrypted_keys])
   end
 
 end

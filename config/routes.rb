@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   post "set_handle" => "home#set_handle"
   post "set_image_url" => "home#set_image_url"
   get  "get_user" => "home#get_user"
+  get  "get_me" => "home#get_me"
   get  "get_encrypted_keys" => "home#get_encrypted_keys"
   post "set_encrypted_keys" => "home#set_encrypted_keys"
   post "set_evm_chain_address" => "home#set_evm_chain_address"

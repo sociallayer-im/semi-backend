@@ -180,6 +180,30 @@ Sets the user's EVM chain address.
 }
 ```
 
+---
+
+## 10. `GET /get_me`
+
+**Description:**
+Retrieves information about the currently authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Response:**
+```json
+{
+  "id": "string",
+  "handle": "string or null",
+  "email": "string or null",
+  "phone": "string",
+  "image_url": "string or null",
+  "evm_chain_address": "string or null",
+  "evm_chain_active_key": "string or null",
+  "remaining_gas_credits": number,
+  "total_used_gas_credits": number
+}
+```
 
 **Note:**
 - Endpoints that modify user data require a valid `Authorization` header with a Bearer token.
