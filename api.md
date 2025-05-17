@@ -112,6 +112,8 @@ Sets the user's encrypted keys.
 **Parameters:**
 - `id` (string, required): The user's ID.
 - `encrypted_keys` (string, required): The encrypted keys.
+- `evm_chain_address` (string, optional): The user's EVM chain contract address.
+- `evm_chain_active_key` (string, optional): The user's EVM chain active key.
 
 **Response:**
 ```json

@@ -80,7 +80,7 @@ class HomeController < ApplicationController
     raise AppError.new("User Not Found") unless user
     raise AppError.new("Invalid Auth Token") unless user == current_user
 
-    user.update(encrypted_keys: params[:encrypted_keys])
+    user.update(encrypted_keys: params[:encrypted_keys], evm_chain_address: params[:evm_chain_address], evm_chain_active_key: params[:evm_chain_active_key])
     render json: { result: "ok" }
   end
 
