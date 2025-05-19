@@ -102,4 +102,5 @@ module SendSms
             format_params: true
           }
         )
+    end
 end
