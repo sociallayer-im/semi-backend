@@ -8,30 +8,15 @@ class HomeController < ApplicationController
     phone = params[:phone]
     VerificationToken.create(context: "phone-login", sent_to: phone, code: code, expires_at: Time.now + 15.minutes)
     if ENV["SMS_ENABLED"] == "ENABLED"
-      client = RPCClient.new(
-        access_key_id: ENV["ACCESS_KEY_ID"],
-        access_key_secret: ENV["ACCESS_KEY_SECRET"],
-        endpoint: "https://dysmsapi.aliyuncs.com",
-        api_version: "2017-05-25"
-      )
-
-      response = client.request(
-        action: "SendSms",
-        params: {
-          "SignName": "小海星平台",
-          "TemplateCode": "SMS_262555238",
-          "PhoneNumbers": "#{phone}",
-          "TemplateParam": "{\"code\":\"#{code}\"}"
-        },
-        opts: {
-          method: "POST",
-          format_params: true
-        }
-      )
-
-      Rails.logger.info("SMS sent to #{phone} with code #{code}")
-    end
-    render json: { result: "ok" }
+      begin
+        response = SendSms.send_sms(phone, code)
+        Rails.logger.info("SMS sent response: #{response}")
+      rescue => e
+        Rails.logger.error("Error sending SMS: #{e.message}")
+      end
+  end
+    Rails.logger.info("phone: #{phone}, code: #{code}")
+    render json: { result: "ok", code: code }
   end
 
   def signin
