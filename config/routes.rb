@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   post "send_sms" => "home#send_sms"
   post "signin" => "home#signin"
+  post "signin_with_password" => "home#signin_with_password"
   post "set_handle" => "home#set_handle"
   post "set_image_url" => "home#set_image_url"
   get  "get_user" => "home#get_user"

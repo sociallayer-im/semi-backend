@@ -33,6 +33,19 @@ class HomeController < ApplicationController
     render json: { result: "ok", auth_token: user.gen_auth_token, phone: params[:phone], id: user.id, address_type: "phone" }
   end
 
+  def signin_with_password
+    phone = params[:phone]
+    password = params[:password]
+    user = User.find_by(phone: phone)
+    if user
+      raise AuthError.new("Invalid Phone Or Password") unless BCrypt::Password.new(user.encrypted_password) == password
+      render json: { result: "ok", auth_token: user.gen_auth_token, phone: params[:phone], id: user.id, address_type: "phone" }
+    else
+      user = User.create(phone: phone, encrypted_password: BCrypt::Password.create(password))
+      render json: { result: "ok", auth_token: user.gen_auth_token, phone: params[:phone], id: user.id, address_type: "phone" }
+    end
+  end
+
   def set_handle
     user = User.find_by(id: params[:id])
     raise AppError.new("User Not Found") unless user
