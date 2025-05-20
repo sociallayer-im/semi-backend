@@ -59,7 +59,29 @@ Signs in a user using phone and verification code. Creates a user if not exists.
 
 ---
 
-## 4. `POST /set_handle`
+## 4. `POST /signin_with_password`
+
+**Description:**
+Signs in a user using phone and password. If the user does not exist, creates a new user with the provided phone and password.
+
+**Parameters:**
+- `phone` (string, required): The user's phone number.
+- `password` (string, required): The user's password.
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "auth_token": "string",
+  "phone": "string",
+  "id": "string",
+  "address_type": "phone"
+}
+```
+
+---
+
+## 5. `POST /set_handle`
 
 **Description:**
 Sets the user's handle (username).
@@ -80,7 +102,7 @@ Sets the user's handle (username).
 
 ---
 
-## 5. `POST /set_image_url`
+## 6. `POST /set_image_url`
 
 **Description:**
 Sets the user's image URL.
@@ -101,7 +123,7 @@ Sets the user's image URL.
 
 ---
 
-## 6. `POST /set_encrypted_keys`
+## 7. `POST /set_encrypted_keys`
 
 **Description:**
 Sets the user's encrypted keys.
@@ -124,7 +146,7 @@ Sets the user's encrypted keys.
 
 ---
 
-## 7. `GET /get_encrypted_keys`
+## 8. `GET /get_encrypted_keys`
 
 **Description:**
 Retrieves the user's encrypted keys.
@@ -145,7 +167,7 @@ Retrieves the user's encrypted keys.
 
 ---
 
-## 8. `GET /get_user`
+## 9. `GET /get_user`
 
 **Description:**
 Retrieves user information.
@@ -166,7 +188,7 @@ Retrieves user information.
 
 ---
 
-## 9. `POST /set_evm_chain_address`
+## 10. `POST /set_evm_chain_address`
 **Description:**
 Sets the user's EVM chain address.
 **Headers:**
@@ -184,7 +206,7 @@ Sets the user's EVM chain address.
 
 ---
 
-## 10. `GET /get_me`
+## 11. `GET /get_me`
 
 **Description:**
 Retrieves information about the currently authenticated user.

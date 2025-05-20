@@ -30,6 +30,7 @@ class HomeController < ApplicationController
     token.update(used: true)
 
     user = User.find_or_create_by(phone: phone)
+    user.update(phone_verified: true) if user.phone_verified == false
     render json: { result: "ok", auth_token: user.gen_auth_token, phone: params[:phone], id: user.id, address_type: "phone" }
   end
 
@@ -38,7 +39,11 @@ class HomeController < ApplicationController
     password = params[:password]
     user = User.find_by(phone: phone)
     if user
-      raise AuthError.new("Invalid Phone Or Password") unless BCrypt::Password.new(user.encrypted_password) == password
+      if user.encrypted_password.present?
+        raise AuthError.new("Invalid Phone Or Password") unless BCrypt::Password.new(user.encrypted_password) == password
+      else
+        user.update(encrypted_password: BCrypt::Password.create(password))
+      end
       render json: { result: "ok", auth_token: user.gen_auth_token, phone: params[:phone], id: user.id, address_type: "phone" }
     else
       user = User.create(phone: phone, encrypted_password: BCrypt::Password.create(password))
