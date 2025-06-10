@@ -237,3 +237,71 @@ Retrieves information about the currently authenticated user.
     "error": "Error message"
   }
   ```
+
+---
+
+## 12. `POST /add_transaction`
+
+**Description:**
+Adds a transaction record for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `tx_hash` (string, required): The transaction hash.
+- `gas_used` (integer, required): The amount of gas used.
+- `status` (string, required): The status of the transaction (e.g., "success").
+- `chain` (string, required): The blockchain type (e.g., "evm").
+- `data` (string, required): Additional data related to the transaction.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---
+
+## 13. `GET /get_transactions`
+
+**Description:**
+Retrieves all transactions for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Response:**
+```json
+{
+  "transactions": [
+    {
+      "tx_hash": "string",
+      "gas_used": number,
+      "status": "string",
+      "chain": "string",
+      "data": "string",
+      "created_at": "string"
+    }
+    // ... more transactions
+  ]
+}
+```
+
+---
+
+## 14. `GET /remaining_free_transactions`
+
+**Description:**
+Retrieves the number of remaining free transactions for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Response:**
+```json
+{
+  "remaining_free_transactions": number
+}
+```
