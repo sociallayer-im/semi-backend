@@ -8,6 +8,7 @@ require "uri"
 
 module SendSms
     def self.send_sms(phone, code)
+      puts "send_sms-----"
         secret_id=ENV['TENCENT_SMS_SECRET_ID']
         secret_key=ENV['TENCENT_SMS_SECRET_KEY']
         # token = ""
@@ -28,6 +29,7 @@ module SendSms
         canonical_headers = "content-type:application/json; charset=utf-8\nhost:#{host}\nx-tc-action:#{action.downcase}\n"
         signed_headers = "content-type;host;x-tc-action"
         payload = "{\"PhoneNumberSet\":[\"#{phone}\"],\"SmsSdkAppId\":\"1400989082\",\"TemplateId\":\"2431912\",\"SignName\":\"深圳市岑赫科技\",\"TemplateParamSet\":[\"#{code}\"]}"
+        # payload = "{\"PhoneNumberSet\":[\"#{phone}\"],\"SmsSdkAppId\":\"1400989082\",\"TemplateId\":\"2431912\",\"SignName\":\"深圳市岑赫科技有限公司\",\"TemplateParamSet\":[\"#{code}\"]}"
         hashed_request_payload = Digest::SHA256.hexdigest(payload)
         canonical_request = [
                                 http_request_method,

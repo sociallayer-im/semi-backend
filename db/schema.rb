@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_090148) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_005508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_090148) do
     t.datetime "updated_at", null: false
     t.index ["token"], name: "index_auth_tokens_on_token", unique: true
     t.index ["user_id"], name: "index_auth_tokens_on_user_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.string "user_id"
+    t.string "chain"
+    t.text "data"
+    t.string "status"
+    t.string "tx_hash"
+    t.bigint "gas_used"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: :string, force: :cascade do |t|
@@ -38,6 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_090148) do
     t.integer "total_used_gas_credits", default: 0, null: false
     t.string "encrypted_password"
     t.boolean "phone_verified", default: false
+    t.integer "transaction_count", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["handle"], name: "index_users_on_handle", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true

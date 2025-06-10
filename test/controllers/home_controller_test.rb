@@ -117,4 +117,20 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert JSON.parse(@response.body).key?("remaining_gas_credits")
   end
 
+  test "should add transaction" do
+    user = User.create(phone: "1234567890")
+    post add_transaction_url, params: { tx_hash: "0x1234567890", gas_used: 100, status: "success", chain: "evm", data: "data" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+
+    get get_transactions_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("transactions")
+
+    get remaining_free_transactions_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("remaining_free_transactions")
+    p @response.body
+  end
+
 end

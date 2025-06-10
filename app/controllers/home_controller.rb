@@ -109,4 +109,27 @@ class HomeController < ApplicationController
     render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits, :encrypted_keys])
   end
 
+  def get_transactions
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    render json: { result: "ok", transactions: user.transactions.as_json(only: [:id, :tx_hash, :gas_used, :status, :chain, :data, :created_at]) }
+  end
+
+  def add_transaction
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data])
+    user.update(transaction_count: user.transaction_count + 1)
+    render json: { result: "ok" }
+  end
+
+  def remaining_free_transactions
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    render json: { result: "ok", remaining_free_transactions: (20 - user.transaction_count) }
+  end
+
 end

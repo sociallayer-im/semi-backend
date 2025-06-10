@@ -15,7 +15,9 @@ Rails.application.routes.draw do
   get  "get_encrypted_keys" => "home#get_encrypted_keys"
   post "set_encrypted_keys" => "home#set_encrypted_keys"
   post "set_evm_chain_address" => "home#set_evm_chain_address"
-
+  get  "get_transactions" => "home#get_transactions"
+  post "add_transaction" => "home#add_transaction"
+  get  "remaining_free_transactions" => "home#remaining_free_transactions"
 
   # Defines the root path route ("/")
   root "home#index"
