@@ -37,6 +37,24 @@ Sends an SMS with a verification code to the provided phone number.
 
 ---
 
+## 2a. `POST /send_email`
+
+**Description:**
+Sends an email with a verification code to the provided email address.
+
+**Parameters:**
+- `email` (string, required): The email address to send the verification code to.
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "email": "string"
+}
+```
+
+---
+
 ## 3. `POST /signin`
 
 **Description:**
@@ -54,6 +72,28 @@ Signs in a user using phone and verification code. Creates a user if not exists.
   "phone": "string",
   "id": "string",
   "address_type": "phone"
+}
+```
+
+---
+
+## 3a. `POST /signin_with_email`
+
+**Description:**
+Signs in a user using email and verification code. Creates a user if not exists.
+
+**Parameters:**
+- `email` (string, required): The user's email address.
+- `code` (string, required): The verification code sent via email.
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "auth_token": "string",
+  "email": "string",
+  "id": "string",
+  "address_type": "email"
 }
 ```
 
