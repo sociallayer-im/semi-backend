@@ -19,6 +19,17 @@ class HomeController < ApplicationController
     render json: { result: "ok", code: code }
   end
 
+  def send_email
+    code = rand(100_000..999_999)
+    email = params[:email]
+    VerificationToken.create(context: "email-login", sent_to: email, code: code, expires_at: Time.now + 60.minutes)
+
+    mailer = SigninMailer.with(code: code, recipient: email).signin
+    mailer.deliver_now!
+
+    render json: { result: "ok", email: params[:email] }
+  end
+
   def signin
     phone = params[:phone]
     code = params[:code]
