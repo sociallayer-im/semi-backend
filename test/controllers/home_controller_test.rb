@@ -65,6 +65,11 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     post set_handle_url, params: { id: user.id, handle: "newhandle" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
     assert JSON.parse(@response.body).key?("result")
+
+    get get_by_handle_url, params: { handle: "newhandle" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("id")
+    assert JSON.parse(@response.body).key?("handle")
   end
 
   test "should set image url" do

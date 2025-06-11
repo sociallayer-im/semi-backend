@@ -51,10 +51,17 @@ class HomeController < ApplicationController
     end
   end
 
+  def get_by_handle
+    user = User.find_by(handle: params[:handle]) || User.find_by(phone: params[:handle])
+    raise AppError.new("User Not Found") unless user
+    render json: user.as_json(only: [:id, :handle, :phone, :image_url, :evm_chain_address, :evm_chain_active_key])
+  end
+
   def set_handle
     user = User.find_by(id: params[:id])
     raise AppError.new("User Not Found") unless user
     raise AppError.new("Invalid Auth Token") unless user == current_user
+    raise AppError.new("handle can not be numeric") if params[:handle].match?(/\A\d+\z/)
 
     user.update(handle: params[:handle])
     render json: { result: "ok" }
