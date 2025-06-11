@@ -45,6 +45,20 @@ class HomeController < ApplicationController
     render json: { result: "ok", auth_token: user.gen_auth_token, phone: params[:phone], id: user.id, address_type: "phone" }
   end
 
+  def signin_with_email
+    email = params[:email]
+    code = params[:code]
+    token = VerificationToken.find_by(context: "email-login", sent_to: email, code: code, used: false)
+
+    raise AppError.new("Invalid Email Or Code") unless token
+    raise AppError.new("Code Expired") if DateTime.now > token.expires_at
+
+    token.update(used: true)
+
+    user = User.find_or_create_by(email: email)
+    render json: { result: "ok", auth_token: user.gen_auth_token, email: params[:email], id: user.id, address_type: "email" }
+  end
+
   def signin_with_password
     phone = params[:phone]
     password = params[:password]

@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   post "send_sms" => "home#send_sms"
+  post "send_email" => "home#send_email"
   post "signin" => "home#signin"
+  post "signin_with_email" => "home#signin_with_email"
   post "signin_with_password" => "home#signin_with_password"
   post "set_handle" => "home#set_handle"
   post "set_image_url" => "home#set_image_url"

@@ -138,4 +138,20 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     p @response.body
   end
 
+  test "should signin with email" do
+    post send_email_url, params: { email: "delivered@resend.dev" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+    assert JSON.parse(@response.body).key?("email")
+    # p ActionMailer::Base.deliveries.last
+    # assert ActionMailer::Base.deliveries.last.to.include?("delivered@resend.dev")
+    # assert ActionMailer::Base.deliveries.last.subject == "Semi Sign-In"
+
+    VerificationToken.create(context: "email-login", sent_to: "delivered@resend.dev", code: "12345", expires_at: Time.now + 15.minutes)
+    post signin_with_email_url, params: { email: "delivered@resend.dev", code: "12345" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+    assert JSON.parse(@response.body).key?("email")
+  end
+
 end
