@@ -94,8 +94,8 @@ module SendSms
         response = client.request(
           action: "SendSms",
           params: {
-            "SignName": "小海星平台",
-            "TemplateCode": "SMS_262555238",
+            "SignName": ENV["ALIYUN_SMS_SIGN_NAME"],
+            "TemplateCode": ENV["ALIYUN_SMS_TEMPLATE_CODE"],
             "PhoneNumbers": "#{phone}",
             "TemplateParam": "{\"code\":\"#{code}\"}"
           },

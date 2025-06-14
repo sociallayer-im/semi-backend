@@ -9,7 +9,7 @@ class HomeController < ApplicationController
     VerificationToken.create(context: "phone-login", sent_to: phone, code: code, expires_at: Time.now + 15.minutes)
     if ENV["SMS_ENABLED"] == "ENABLED"
       begin
-        response = SendSms.send_sms(phone, code)
+        response = SendSms.send_sms_aliyun(phone, code)
         Rails.logger.info("SMS sent response: #{response}")
       rescue => e
         Rails.logger.error("Error sending SMS: #{e.message}")
