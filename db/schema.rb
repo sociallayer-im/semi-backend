@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_005508) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_25_094531) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_005508) do
     t.datetime "updated_at", null: false
     t.index ["token"], name: "index_auth_tokens_on_token", unique: true
     t.index ["user_id"], name: "index_auth_tokens_on_user_id"
+  end
+
+  create_table "token_classes", force: :cascade do |t|
+    t.string "token_type", null: false, comment: "ERC20, ERC721, ERC1155"
+    t.string "chain", null: false, comment: "ethereum, optimism, solana, etc"
+    t.string "address", null: false, comment: "token address"
+    t.string "name"
+    t.string "symbol"
+    t.string "image_url"
+    t.string "publisher"
+    t.string "publisher_address"
+    t.integer "position", default: 0
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "transactions", force: :cascade do |t|

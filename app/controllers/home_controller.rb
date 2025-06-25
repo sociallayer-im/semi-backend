@@ -175,4 +175,17 @@ class HomeController < ApplicationController
     render json: { result: "ok", remaining_free_transactions: (20 - user.transaction_count) }
   end
 
+  def get_token_classes
+    render json: { result: "ok", token_classes: TokenClass.order(position: :desc).all }
+  end
+
+  def add_token_class
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+    TokenClass.create(
+      token_type: params[:token_type], chain: params[:chain], address: params[:address], name: params[:name], symbol: params[:symbol], image_url: params[:image_url],
+      publisher: user.id, publisher_address: params[:publisher_address], position: params[:position], description: params[:description])
+    render json: { result: "ok" }
+  end
+
 end

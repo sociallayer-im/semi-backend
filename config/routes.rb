@@ -22,7 +22,8 @@ Rails.application.routes.draw do
   post "add_transaction" => "home#add_transaction"
   post "add_transaction_with_gas_credits" => "home#add_transaction_with_gas_credits"
   get  "remaining_free_transactions" => "home#remaining_free_transactions"
-
+  get  "get_token_classes" => "home#get_token_classes"
+  post "add_token_class" => "home#add_token_class"
   # Defines the root path route ("/")
   root "home#index"
 end

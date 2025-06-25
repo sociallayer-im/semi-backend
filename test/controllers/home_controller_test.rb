@@ -163,4 +163,17 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert JSON.parse(@response.body).key?("result")
   end
 
+  test "should get token classes" do
+    user = User.create(phone: "1234567890")
+    post add_token_class_url, params: { token_type: "ERC20", chain: "ethereum", address: "0x1234567890", name: "Test Token", symbol: "TT", image_url: "http://example.com/image.png", publisher: "Test Publisher", publisher_address: "0x1234567890", position: 0, description: "Test Description" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+
+    get get_token_classes_url
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+    assert JSON.parse(@response.body).key?("token_classes")
+  end
+
+
 end
