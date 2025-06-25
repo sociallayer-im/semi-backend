@@ -157,6 +157,17 @@ class HomeController < ApplicationController
     render json: { result: "ok" }
   end
 
+  def add_transaction_with_gas_credits
+    raise AppError.new("ADMIN ONLY") unless params[:ADMIN_KEY] == ENV["ADMIN_KEY"]
+    user = User.find_by(id: params[:id])
+    raise AppError.new("User Not Found") unless user
+
+    transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data])
+    user.increment!(:total_used_gas_credits, params[:gas_used].to_i)
+    user.update(transaction_count: user.transaction_count + 1)
+    render json: { result: "ok" }
+  end
+
   def remaining_free_transactions
     user = current_user
     raise AppError.new("User Not Found") unless user

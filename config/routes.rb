@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   post "set_evm_chain_address" => "home#set_evm_chain_address"
   get  "get_transactions" => "home#get_transactions"
   post "add_transaction" => "home#add_transaction"
+  post "add_transaction_with_gas_credits" => "home#add_transaction_with_gas_credits"
   get  "remaining_free_transactions" => "home#remaining_free_transactions"
 
   # Defines the root path route ("/")

@@ -154,4 +154,13 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert JSON.parse(@response.body).key?("email")
   end
 
+  test "should add transaction with gas credits" do
+    ADMIN_KEY = "1234567890"
+    ENV["ADMIN_KEY"] = ADMIN_KEY
+    user = User.create(phone: "1234567890")
+    post add_transaction_with_gas_credits_url, params: { id: user.id, tx_hash: "0x1234567890", gas_used: 100, status: "success", chain: "evm", data: "data", ADMIN_KEY: ADMIN_KEY }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+  end
+
 end
