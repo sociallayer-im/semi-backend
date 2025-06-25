@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  root "home#index"
   post "send_sms" => "home#send_sms"
   post "send_email" => "home#send_email"
   post "signin" => "home#signin"
@@ -20,10 +21,9 @@ Rails.application.routes.draw do
   post "set_evm_chain_address" => "home#set_evm_chain_address"
   get  "get_transactions" => "home#get_transactions"
   post "add_transaction" => "home#add_transaction"
-  post "add_transaction_with_gas_credits" => "home#add_transaction_with_gas_credits"
   get  "remaining_free_transactions" => "home#remaining_free_transactions"
+  post "add_transaction_with_gas_credits" => "home#add_transaction_with_gas_credits"
   get  "get_token_classes" => "home#get_token_classes"
   post "add_token_class" => "home#add_token_class"
   # Defines the root path route ("/")
-  root "home#index"
 end

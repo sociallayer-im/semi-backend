@@ -37,7 +37,7 @@ Sends an SMS with a verification code to the provided phone number.
 
 ---
 
-## 2a. `POST /send_email`
+## 3. `POST /send_email`
 
 **Description:**
 Sends an email with a verification code to the provided email address.
@@ -55,7 +55,7 @@ Sends an email with a verification code to the provided email address.
 
 ---
 
-## 3. `POST /signin`
+## 4. `POST /signin`
 
 **Description:**
 Signs in a user using phone and verification code. Creates a user if not exists.
@@ -77,7 +77,7 @@ Signs in a user using phone and verification code. Creates a user if not exists.
 
 ---
 
-## 3a. `POST /signin_with_email`
+## 5. `POST /signin_with_email`
 
 **Description:**
 Signs in a user using email and verification code. Creates a user if not exists.
@@ -99,7 +99,7 @@ Signs in a user using email and verification code. Creates a user if not exists.
 
 ---
 
-## 4. `POST /signin_with_password`
+## 6. `POST /signin_with_password`
 
 **Description:**
 Signs in a user using phone and password. If the user does not exist, creates a new user with the provided phone and password.
@@ -334,7 +334,7 @@ Retrieves all transactions for the authenticated user.
 ## 14. `GET /remaining_free_transactions`
 
 **Description:**
-Retrieves the number of remaining free transactions for the authenticated user.
+Returns the number of remaining free transactions for the authenticated user. Each user starts with 20 free transactions.
 
 **Headers:**
 - `Authorization: Bearer <auth_token>`
@@ -342,6 +342,91 @@ Retrieves the number of remaining free transactions for the authenticated user.
 **Response:**
 ```json
 {
-  "remaining_free_transactions": number
+  "result": "ok",
+  "remaining_free_transactions": 17
 }
 ```
+
+---
+
+## X. `GET /get_token_classes`
+
+**Description:**
+Retrieves a list of all token classes, ordered by position descending.
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "token_classes": [
+    {
+      "id": 1,
+      "token_type": "ERC20",
+      "chain": "ethereum",
+      "address": "0x...",
+      "name": "TokenName",
+      "symbol": "TKN",
+      "image_url": "https://...",
+      "publisher": 123,
+      "publisher_address": "0x...",
+      "position": 10,
+      "description": "A sample token class."
+    }
+    // ... more token classes ...
+  ]
+}
+```
+
+---
+
+## X. `POST /add_token_class`
+
+**Description:**
+Creates a new token class. Requires authentication.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `token_type` (string, required): The type of token (e.g., ERC20).
+- `chain` (string, required): The blockchain name (e.g., ethereum).
+- `address` (string, required): The contract address of the token.
+- `name` (string, required): The name of the token.
+- `symbol` (string, required): The symbol of the token.
+- `image_url` (string, required): The image URL for the token.
+- `publisher_address` (string, required): The publisher's address.
+- `position` (integer, required): The position for ordering.
+- `description` (string, optional): A description of the token class.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---
+
+## X. `POST /add_transaction_with_gas_credits`
+
+**Description:**
+Adds a transaction for a user and increments their used gas credits. **Admin only**: requires a valid `ADMIN_KEY`.
+
+**Parameters:**
+- `ADMIN_KEY` (string, required): The admin key (must match the server's environment variable).
+- `id` (string, required): The user's ID.
+- `tx_hash` (string, required): The transaction hash.
+- `gas_used` (integer, required): The amount of gas used.
+- `status` (string, required): The status of the transaction (e.g., "success").
+- `chain` (string, required): The blockchain type (e.g., "evm").
+- `data` (string, required): Additional data related to the transaction.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+**Errors:**
+- Returns an error if the `ADMIN_KEY` is invalid or the user is not found.

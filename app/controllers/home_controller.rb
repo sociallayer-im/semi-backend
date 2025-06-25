@@ -157,6 +157,13 @@ class HomeController < ApplicationController
     render json: { result: "ok" }
   end
 
+  def remaining_free_transactions
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    render json: { result: "ok", remaining_free_transactions: (20 - user.transaction_count) }
+  end
+
   def add_transaction_with_gas_credits
     raise AppError.new("ADMIN ONLY") unless params[:ADMIN_KEY] == ENV["ADMIN_KEY"]
     user = User.find_by(id: params[:id])
@@ -166,13 +173,6 @@ class HomeController < ApplicationController
     user.increment!(:total_used_gas_credits, params[:gas_used].to_i)
     user.update(transaction_count: user.transaction_count + 1)
     render json: { result: "ok" }
-  end
-
-  def remaining_free_transactions
-    user = current_user
-    raise AppError.new("User Not Found") unless user
-
-    render json: { result: "ok", remaining_free_transactions: (20 - user.transaction_count) }
   end
 
   def get_token_classes
