@@ -158,16 +158,18 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     ADMIN_KEY = "1234567890"
     ENV["ADMIN_KEY"] = ADMIN_KEY
     user = User.create(phone: "1234567890")
-    post add_transaction_with_gas_credits_url, params: { id: user.id, tx_hash: "0x1234567890", gas_used: 100, status: "success", chain: "evm", data: "data", ADMIN_KEY: ADMIN_KEY }
+    post add_transaction_with_gas_credits_url, params: { id: user.id, tx_hash: "0x1234567890", gas_used: 100, status: "success", chain: "evm", data: "data" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
     assert JSON.parse(@response.body).key?("result")
   end
 
   test "should get token classes" do
     user = User.create(phone: "1234567890")
-    post add_token_class_url, params: { token_type: "ERC20", chain: "ethereum", address: "0x1234567890", name: "Test Token", symbol: "TT", image_url: "http://example.com/image.png", publisher: "Test Publisher", publisher_address: "0x1234567890", position: 0, description: "Test Description" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    post add_token_class_url, params: { token_type: "ERC20", chain: "ethereum", chain_id: 1, address: "0x1234567890", name: "Test Token", symbol: "TT", decimals: 18, image_url: "http://example.com/image.png", publisher: "Test Publisher", publisher_address: "0x1234567890", position: 0, description: "Test Description" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
     assert JSON.parse(@response.body).key?("result")
+    assert TokenClass.find_by(address: "0x1234567890").decimals == 18
+    assert TokenClass.find_by(address: "0x1234567890").chain_id == 1
 
     get get_token_classes_url
     assert_response :success

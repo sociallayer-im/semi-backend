@@ -6,7 +6,7 @@ All endpoints are relative to your Rails server root (e.g., `http://localhost:30
 
 ---
 
-## 1. `GET /`
+## `GET /`
 
 **Description:**
 Returns a simple hello world message.
@@ -20,7 +20,7 @@ Returns a simple hello world message.
 
 ---
 
-## 2. `POST /send_sms`
+## `POST /send_sms`
 
 **Description:**
 Sends an SMS with a verification code to the provided phone number.
@@ -37,7 +37,7 @@ Sends an SMS with a verification code to the provided phone number.
 
 ---
 
-## 3. `POST /send_email`
+## `POST /send_email`
 
 **Description:**
 Sends an email with a verification code to the provided email address.
@@ -55,7 +55,7 @@ Sends an email with a verification code to the provided email address.
 
 ---
 
-## 4. `POST /signin`
+## `POST /signin`
 
 **Description:**
 Signs in a user using phone and verification code. Creates a user if not exists.
@@ -77,7 +77,7 @@ Signs in a user using phone and verification code. Creates a user if not exists.
 
 ---
 
-## 5. `POST /signin_with_email`
+## `POST /signin_with_email`
 
 **Description:**
 Signs in a user using email and verification code. Creates a user if not exists.
@@ -99,7 +99,7 @@ Signs in a user using email and verification code. Creates a user if not exists.
 
 ---
 
-## 6. `POST /signin_with_password`
+## `POST /signin_with_password`
 
 **Description:**
 Signs in a user using phone and password. If the user does not exist, creates a new user with the provided phone and password.
@@ -121,7 +121,7 @@ Signs in a user using phone and password. If the user does not exist, creates a 
 
 ---
 
-## 5. `POST /set_handle`
+## `POST /set_handle`
 
 **Description:**
 Sets the user's handle (username).
@@ -142,7 +142,7 @@ Sets the user's handle (username).
 
 ---
 
-## 6. `POST /set_image_url`
+## `POST /set_image_url`
 
 **Description:**
 Sets the user's image URL.
@@ -163,51 +163,7 @@ Sets the user's image URL.
 
 ---
 
-## 7. `POST /set_encrypted_keys`
-
-**Description:**
-Sets the user's encrypted keys.
-
-**Headers:**
-- `Authorization: Bearer <auth_token>`
-
-**Parameters:**
-- `id` (string, required): The user's ID.
-- `encrypted_keys` (string, required): The encrypted keys.
-- `evm_chain_address` (string, optional): The user's EVM chain contract address.
-- `evm_chain_active_key` (string, optional): The user's EVM chain active key.
-
-**Response:**
-```json
-{
-  "result": "ok"
-}
-```
-
----
-
-## 8. `GET /get_encrypted_keys`
-
-**Description:**
-Retrieves the user's encrypted keys.
-
-**Headers:**
-- `Authorization: Bearer <auth_token>`
-
-**Parameters:**
-- `id` (string, required): The user's ID.
-
-**Response:**
-```json
-{
-  "result": "ok",
-  "encrypted_keys": "string"
-}
-```
-
----
-
-## 9. `GET /get_user`
+## `GET /get_user`
 
 **Description:**
 Retrieves user information.
@@ -228,25 +184,7 @@ Retrieves user information.
 
 ---
 
-## 10. `POST /set_evm_chain_address`
-**Description:**
-Sets the user's EVM chain address.
-**Headers:**
-- `Authorization: Bearer <auth_token>`
-**Parameters:**
-- `id` (string, required): The user's ID.
-- `evm_chain_address` (string, required): evm chain contract address
-- `evm_chain_active_key` (string, required): evm chain active_key.
-**Response:**
-```json
-{
-  "result": "ok"
-}
-```
-
----
-
-## 11. `GET /get_me`
+## `GET /get_me`
 
 **Description:**
 Retrieves information about the currently authenticated user.
@@ -280,7 +218,87 @@ Retrieves information about the currently authenticated user.
 
 ---
 
-## 12. `POST /add_transaction`
+## `GET /remaining_free_transactions`
+
+**Description:**
+Returns the number of remaining free transactions for the authenticated user. Each user starts with 20 free transactions.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "remaining_free_transactions": 17
+}
+```
+
+---
+
+## `GET /get_encrypted_keys`
+
+**Description:**
+Retrieves the user's encrypted keys.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `id` (string, required): The user's ID.
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "encrypted_keys": "string"
+}
+```
+
+---
+
+## `POST /set_encrypted_keys`
+
+**Description:**
+Sets the user's encrypted keys.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `id` (string, required): The user's ID.
+- `encrypted_keys` (string, required): The encrypted keys.
+- `evm_chain_address` (string, optional): The user's EVM chain contract address.
+- `evm_chain_active_key` (string, optional): The user's EVM chain active key.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---
+
+## `POST /set_evm_chain_address`
+**Description:**
+Sets the user's EVM chain address.
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+**Parameters:**
+- `id` (string, required): The user's ID.
+- `evm_chain_address` (string, required): evm chain contract address
+- `evm_chain_active_key` (string, required): evm chain active_key.
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---
+
+## `POST /add_transaction`
 
 **Description:**
 Adds a transaction record for the authenticated user.
@@ -304,7 +322,7 @@ Adds a transaction record for the authenticated user.
 
 ---
 
-## 13. `GET /get_transactions`
+## `GET /get_transactions`
 
 **Description:**
 Retrieves all transactions for the authenticated user.
@@ -331,25 +349,31 @@ Retrieves all transactions for the authenticated user.
 
 ---
 
-## 14. `GET /remaining_free_transactions`
+## `POST /add_transaction_with_gas_credits`
 
 **Description:**
-Returns the number of remaining free transactions for the authenticated user. Each user starts with 20 free transactions.
+Adds a transaction for the authenticated user and increments their used gas credits.
 
 **Headers:**
 - `Authorization: Bearer <auth_token>`
 
+**Parameters:**
+- `tx_hash` (string, required): The transaction hash.
+- `gas_used` (integer, required): The amount of gas used.
+- `status` (string, required): The status of the transaction (e.g., "success").
+- `chain` (string, required): The blockchain type (e.g., "evm").
+- `data` (string, required): Additional data related to the transaction.
+
 **Response:**
 ```json
 {
-  "result": "ok",
-  "remaining_free_transactions": 17
+  "result": "ok"
 }
 ```
 
 ---
 
-## X. `GET /get_token_classes`
+## `GET /get_token_classes`
 
 **Description:**
 Retrieves a list of all token classes, ordered by position descending.
@@ -379,7 +403,7 @@ Retrieves a list of all token classes, ordered by position descending.
 
 ---
 
-## X. `POST /add_token_class`
+## `POST /add_token_class`
 
 **Description:**
 Creates a new token class. Requires authentication.
@@ -388,11 +412,13 @@ Creates a new token class. Requires authentication.
 - `Authorization: Bearer <auth_token>`
 
 **Parameters:**
-- `token_type` (string, required): The type of token (e.g., ERC20).
-- `chain` (string, required): The blockchain name (e.g., ethereum).
+- `token_type` (string, required): The type of token. **Valid values:** `ERC20`, `ERC721`, `ERC1155`.
+- `chain` (string, required): The blockchain name. **Valid values:** `ethereum`, `optimism`, `arbitrum`, `moonbeam`, `solana`.
+- `chain_id` (integer, optional): The chain ID. **Default:** `0`.
 - `address` (string, required): The contract address of the token.
 - `name` (string, required): The name of the token.
 - `symbol` (string, required): The symbol of the token.
+- `decimals` (integer, optional): The number of decimals. **Default:** `18`.
 - `image_url` (string, required): The image URL for the token.
 - `publisher_address` (string, required): The publisher's address.
 - `position` (integer, required): The position for ordering.
@@ -404,29 +430,3 @@ Creates a new token class. Requires authentication.
   "result": "ok"
 }
 ```
-
----
-
-## X. `POST /add_transaction_with_gas_credits`
-
-**Description:**
-Adds a transaction for a user and increments their used gas credits. **Admin only**: requires a valid `ADMIN_KEY`.
-
-**Parameters:**
-- `ADMIN_KEY` (string, required): The admin key (must match the server's environment variable).
-- `id` (string, required): The user's ID.
-- `tx_hash` (string, required): The transaction hash.
-- `gas_used` (integer, required): The amount of gas used.
-- `status` (string, required): The status of the transaction (e.g., "success").
-- `chain` (string, required): The blockchain type (e.g., "evm").
-- `data` (string, required): Additional data related to the transaction.
-
-**Response:**
-```json
-{
-  "result": "ok"
-}
-```
-
-**Errors:**
-- Returns an error if the `ADMIN_KEY` is invalid or the user is not found.

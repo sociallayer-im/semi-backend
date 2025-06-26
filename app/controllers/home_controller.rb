@@ -76,12 +76,6 @@ class HomeController < ApplicationController
     end
   end
 
-  def get_by_handle
-    user = User.find_by(handle: params[:handle]) || User.find_by(phone: params[:handle])
-    raise AppError.new("User Not Found") unless user
-    render json: user.as_json(only: [:id, :handle, :phone, :image_url, :evm_chain_address, :evm_chain_active_key])
-  end
-
   def set_handle
     user = User.find_by(id: params[:id])
     raise AppError.new("User Not Found") unless user
@@ -101,30 +95,10 @@ class HomeController < ApplicationController
     render json: { result: "ok" }
   end
 
-  def set_evm_chain_address
-    user = User.find_by(id: params[:id])
+  def get_by_handle
+    user = User.find_by(handle: params[:handle]) || User.find_by(phone: params[:handle])
     raise AppError.new("User Not Found") unless user
-    raise AppError.new("Invalid Auth Token") unless user == current_user
-
-    user.update(evm_chain_address: params[:evm_chain_address], evm_chain_active_key: params[:evm_chain_active_key])
-    render json: { result: "ok" }
-  end
-
-  def set_encrypted_keys
-    user = User.find_by(id: params[:id])
-    raise AppError.new("User Not Found") unless user
-    raise AppError.new("Invalid Auth Token") unless user == current_user
-
-    user.update(encrypted_keys: params[:encrypted_keys], evm_chain_address: params[:evm_chain_address], evm_chain_active_key: params[:evm_chain_active_key])
-    render json: { result: "ok" }
-  end
-
-  def get_encrypted_keys
-    user = User.find_by(id: params[:id])
-    raise AppError.new("User Not Found") unless user
-    raise AppError.new("Invalid Auth Token") unless user == current_user
-
-    render json: { result: "ok", encrypted_keys: user.encrypted_keys }
+    render json: user.as_json(only: [:id, :handle, :phone, :image_url, :evm_chain_address, :evm_chain_active_key])
   end
 
   def get_user
@@ -139,6 +113,39 @@ class HomeController < ApplicationController
     raise AppError.new("User Not Found") unless user
 
     render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits, :encrypted_keys])
+  end
+
+  def remaining_free_transactions
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    render json: { result: "ok", remaining_free_transactions: (20 - user.transaction_count) }
+  end
+
+  def get_encrypted_keys
+    user = User.find_by(id: params[:id])
+    raise AppError.new("User Not Found") unless user
+    raise AppError.new("Invalid Auth Token") unless user == current_user
+
+    render json: { result: "ok", encrypted_keys: user.encrypted_keys }
+  end
+
+  def set_encrypted_keys
+    user = User.find_by(id: params[:id])
+    raise AppError.new("User Not Found") unless user
+    raise AppError.new("Invalid Auth Token") unless user == current_user
+
+    user.update(encrypted_keys: params[:encrypted_keys], evm_chain_address: params[:evm_chain_address], evm_chain_active_key: params[:evm_chain_active_key])
+    render json: { result: "ok" }
+  end
+
+  def set_evm_chain_address
+    user = User.find_by(id: params[:id])
+    raise AppError.new("User Not Found") unless user
+    raise AppError.new("Invalid Auth Token") unless user == current_user
+
+    user.update(evm_chain_address: params[:evm_chain_address], evm_chain_active_key: params[:evm_chain_active_key])
+    render json: { result: "ok" }
   end
 
   def get_transactions
@@ -157,16 +164,10 @@ class HomeController < ApplicationController
     render json: { result: "ok" }
   end
 
-  def remaining_free_transactions
-    user = current_user
-    raise AppError.new("User Not Found") unless user
-
-    render json: { result: "ok", remaining_free_transactions: (20 - user.transaction_count) }
-  end
-
   def add_transaction_with_gas_credits
-    raise AppError.new("ADMIN ONLY") unless params[:ADMIN_KEY] == ENV["ADMIN_KEY"]
-    user = User.find_by(id: params[:id])
+    # raise AppError.new("ADMIN ONLY") unless params[:ADMIN_KEY] == ENV["ADMIN_KEY"]
+    # user = User.find_by(id: params[:id])
+    user = current_user
     raise AppError.new("User Not Found") unless user
 
     transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data])
@@ -183,7 +184,8 @@ class HomeController < ApplicationController
     user = current_user
     raise AppError.new("User Not Found") unless user
     TokenClass.create(
-      token_type: params[:token_type], chain: params[:chain], address: params[:address], name: params[:name], symbol: params[:symbol], image_url: params[:image_url],
+      token_type: params[:token_type], chain: params[:chain], chain_id: params[:chain_id], address: params[:address],
+      name: params[:name], symbol: params[:symbol], decimals: params[:decimals], image_url: params[:image_url],
       publisher: user.id, publisher_address: params[:publisher_address], position: params[:position], description: params[:description])
     render json: { result: "ok" }
   end
