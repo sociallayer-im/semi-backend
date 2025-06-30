@@ -1,5 +1,5 @@
 class SigninMailer < ApplicationMailer
-    default from: 'Semi <send@app.sola.day>'
+    default from: 'Semi <semi@together.li>'
     def signin
       @code = params[:code]
       @recipient = params[:recipient]

@@ -35,6 +35,7 @@ gem "http"
 gem "rest-client"
 gem "aliyunsdkcore"
 gem "rack-cors"
+gem "resend"
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
