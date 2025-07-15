@@ -25,5 +25,8 @@ Rails.application.routes.draw do
   post "add_transaction_with_gas_credits" => "home#add_transaction_with_gas_credits"
   get  "get_token_classes" => "home#get_token_classes"
   post "add_token_class" => "home#add_token_class"
+  post "add_wallet" => "home#add_wallet"
+  get  "get_wallets" => "home#get_wallets"
+  post "remove_wallet" => "home#remove_wallet"
   # Defines the root path route ("/")
 end

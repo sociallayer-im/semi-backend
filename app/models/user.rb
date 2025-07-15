@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :auth_tokens
+  has_many :wallets
   has_many :transactions
 
   def gen_auth_token

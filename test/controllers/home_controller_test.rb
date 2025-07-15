@@ -177,5 +177,28 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert JSON.parse(@response.body).key?("token_classes")
   end
 
+  test "should add wallet" do
+    user = User.create(phone: "1234567890")
+    post add_wallet_url, params: { name: "Test Wallet", wallet_type: "evm", chain: "ethereum", evm_chain_address: "0x1234567890", evm_chain_active_key: "0x1234567890", encrypted_keys: "encrypted_data", format: "json" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+    assert JSON.parse(@response.body).key?("wallet")
+
+    get get_wallets_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert JSON.parse(@response.body).key?("result")
+    assert JSON.parse(@response.body).key?("wallets")
+
+    assert JSON.parse(@response.body)["wallets"].first["id"] == Wallet.find_by(name: "Test Wallet").id
+    assert JSON.parse(@response.body)["wallets"].first["name"] == "Test Wallet"
+    assert JSON.parse(@response.body)["wallets"].first["wallet_type"] == "evm"
+
+    post remove_wallet_url, params: { id: Wallet.find_by(name: "Test Wallet").id }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert JSON.parse(@response.body).key?("result")
+
+    get get_wallets_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+  end
+
 
 end

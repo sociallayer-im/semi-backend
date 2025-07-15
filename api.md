@@ -430,3 +430,91 @@ Creates a new token class. Requires authentication.
   "result": "ok"
 }
 ```
+
+---
+
+## `POST /add_wallet`
+
+**Description:**
+Adds a new wallet for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `name` (string, required): The name of the wallet.
+- `wallet_type` (string, required): The type of wallet (e.g., "evm").
+- `chain` (string, required): The blockchain name (e.g., "ethereum").
+- `evm_chain_address` (string, optional): The EVM chain address for the wallet.
+- `evm_chain_active_key` (string, optional): The EVM chain active key for the wallet.
+- `encrypted_keys` (object, optional): The encrypted keys for the wallet (JSON object).
+- `format` (string, optional): The format of the wallet (e.g., "json").
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "wallet": {
+    "id": "string",
+    "name": "string",
+    "wallet_type": "string",
+    "chain": "string",
+    "evm_chain_address": "string or null",
+    "evm_chain_active_key": "string or null",
+    "encrypted_keys": {},
+    "format": "string or null"
+  }
+}
+```
+
+---
+
+## `GET /get_wallets`
+
+**Description:**
+Retrieves all wallets for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "wallets": [
+    {
+      "id": "string",
+      "name": "string",
+      "wallet_type": "string",
+      "chain": "string",
+      "evm_chain_address": "string or null",
+      "evm_chain_active_key": "string or null",
+      "encrypted_keys": {},
+      "format": "string or null"
+    }
+    // ... more wallets ...
+  ]
+}
+```
+
+---
+
+## `POST /remove_wallet`
+
+**Description:**
+Removes a wallet for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `id` (string, required): The wallet's ID to remove.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_26_110504) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_15_061701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_26_110504) do
     t.decimal "gas_used", precision: 80
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "wallet_id"
   end
 
   create_table "users", id: :string, force: :cascade do |t|
@@ -78,6 +79,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_26_110504) do
     t.string "code", null: false
     t.datetime "expires_at", null: false
     t.boolean "used", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "wallets", id: :string, force: :cascade do |t|
+    t.string "user_id"
+    t.string "name"
+    t.string "wallet_type"
+    t.string "chain"
+    t.string "evm_chain_address"
+    t.string "evm_chain_active_key"
+    t.jsonb "encrypted_keys"
+    t.string "format"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

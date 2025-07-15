@@ -190,4 +190,29 @@ class HomeController < ApplicationController
     render json: { result: "ok" }
   end
 
+  def add_wallet
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    wallet = user.wallets.create(name: params[:name], wallet_type: params[:wallet_type], chain: params[:chain], evm_chain_address: params[:evm_chain_address], evm_chain_active_key: params[:evm_chain_active_key], encrypted_keys: params[:encrypted_keys], format: params[:format])
+    render json: { result: "ok", wallet: wallet.as_json(only: [:id, :name, :wallet_type, :chain, :evm_chain_address, :evm_chain_active_key, :encrypted_keys, :format]) }
+  end
+
+  def get_wallets
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    render json: { result: "ok", wallets: user.wallets.as_json(only: [:id, :name, :wallet_type, :chain, :evm_chain_address, :evm_chain_active_key, :encrypted_keys, :format]) }
+  end
+
+  def remove_wallet
+    user = current_user
+    raise AppError.new("User Not Found") unless user
+
+    wallet = user.wallets.find_by(id: params[:id])
+    raise AppError.new("Wallet Not Found") unless wallet
+
+    wallet.destroy
+    render json: { result: "ok" }
+  end
 end
