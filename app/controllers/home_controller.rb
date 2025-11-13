@@ -98,21 +98,21 @@ class HomeController < ApplicationController
   def get_by_handle
     user = User.find_by(handle: params[:handle]) || User.find_by(phone: params[:handle])
     raise AppError.new("User Not Found") unless user
-    render json: user.as_json(only: [:id, :handle, :phone, :image_url, :evm_chain_address, :evm_chain_active_key])
+    render json: user.as_json(only: [:id, :handle, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :can_send_badge])
   end
 
   def get_user
     user = User.find_by(id: params[:id])
     raise AppError.new("User Not Found") unless user
 
-    render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits])
+    render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits, :can_send_badge])
   end
 
   def get_me
     user = current_user
     raise AppError.new("User Not Found") unless user
 
-    render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits, :encrypted_keys])
+    render json: user.as_json(only: [:id, :handle, :email, :phone, :image_url, :evm_chain_address, :evm_chain_active_key, :remaining_gas_credits, :total_used_gas_credits, :encrypted_keys, :can_send_badge])
   end
 
   def remaining_free_transactions
