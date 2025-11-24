@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_16_210408) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_24_040018) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_210408) do
     t.boolean "phone_verified", default: false
     t.integer "transaction_count", default: 0, null: false
     t.boolean "can_send_badge", default: false
+    t.jsonb "contact_list"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["handle"], name: "index_users_on_handle", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true

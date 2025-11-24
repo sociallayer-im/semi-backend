@@ -220,4 +220,19 @@ class HomeController < ApplicationController
     wallet.destroy
     render json: { result: "ok" }
   end
+
+  def set_contacts
+    user = User.find_by(id: params[:id])
+    raise AppError.new("User Not Found") unless user
+    raise AppError.new("Invalid Auth Token") unless user == current_user
+
+    user.update(contact_list: params[:contact_list])
+    render json: { result: "ok" }
+  end
+
+  def get_contacts
+    user = User.find_by(id: params[:id])
+    raise AppError.new("User Not Found") unless user
+    render json: { result: "ok", contacts: user.contact_list }
+  end
 end

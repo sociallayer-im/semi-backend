@@ -200,5 +200,37 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should set and get contacts" do
+    user = User.create(phone: "1234567890")
+    contact_list = [{ "name" => "Alice", "phone" => "9876543210" }, { "name" => "Bob", "phone" => "5555555555" }]
+
+    post set_contacts_url, params: { id: user.id, contact_list: contact_list }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert_equal "ok", JSON.parse(@response.body)["result"]
+
+    user.reload
+    assert_equal contact_list, user.contact_list
+
+    get get_contacts_url, params: { id: user.id }
+    assert_response :success
+    assert_equal "ok", JSON.parse(@response.body)["result"]
+    assert_equal contact_list, JSON.parse(@response.body)["contacts"]
+  end
+
+  test "should fail set_contacts without auth" do
+    user = User.create(phone: "1234567890")
+    other_user = User.create(phone: "9999999999")
+    contact_list = [{ "name" => "Alice", "phone" => "9876543210" }]
+
+    post set_contacts_url, params: { id: user.id, contact_list: contact_list }, headers: { "Authorization" => "Bearer #{other_user.gen_auth_token}" }
+    assert_response :bad_request
+    assert_equal "Invalid Auth Token", JSON.parse(@response.body)["message"]
+  end
+
+  test "should fail get_contacts for non-existent user" do
+    get get_contacts_url, params: { id: "nonexistent" }
+    assert_response :bad_request
+    assert_equal "User Not Found", JSON.parse(@response.body)["message"]
+  end
 
 end

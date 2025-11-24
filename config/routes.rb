@@ -28,5 +28,8 @@ Rails.application.routes.draw do
   post "add_wallet" => "home#add_wallet"
   get  "get_wallets" => "home#get_wallets"
   post "remove_wallet" => "home#remove_wallet"
+  post "set_contacts" => "home#set_contacts"
+  get  "get_contacts" => "home#get_contacts"
+
   # Defines the root path route ("/")
 end
