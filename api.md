@@ -518,3 +518,47 @@ Removes a wallet for the authenticated user.
 ```
 
 ---
+
+## `POST /set_contacts`
+
+**Description:**
+Sets the contact list for the authenticated user.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `id` (string, required): The user's ID.
+- `contact_list` (array, required): An array of contact objects.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---
+
+## `GET /get_contacts`
+
+**Description:**
+Retrieves the contact list for a user.
+
+**Parameters:**
+- `id` (string, required): The user's ID.
+
+**Response:**
+```json
+{
+  "result": "ok",
+  "contacts": [
+    {
+      "name": "string",
+      "phone": "string"
+    }
+  ]
+}
+```
+
+---
