@@ -164,7 +164,7 @@ class HomeController < ApplicationController
     user = current_user
     raise AppError.new("User Not Found") unless user
 
-    transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data], memo: params[:memo])
+    transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data], memo: params[:memo], sender_note: params[:sender_note], receiver_note: params[:receiver_note], receiver_address: params[:receiver_address], sender_address: params[:sender_address])
     user.update(transaction_count: user.transaction_count + 1)
     render json: { result: "ok" }
   end
@@ -175,9 +175,19 @@ class HomeController < ApplicationController
     user = current_user
     raise AppError.new("User Not Found") unless user
 
-    transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data])
+    transaction = user.transactions.create(tx_hash: params[:tx_hash], gas_used: params[:gas_used], status: params[:status], chain: params[:chain], data: params[:data], memo: params[:memo], sender_note: params[:sender_note], receiver_note: params[:receiver_note], receiver_address: params[:receiver_address], sender_address: params[:sender_address])
     user.increment!(:total_used_gas_credits, params[:gas_used].to_i)
     user.update(transaction_count: user.transaction_count + 1)
+    render json: { result: "ok" }
+  end
+
+  def set_transaction_note
+    transaction = Transaction.find_by(id: params[:id])
+    raise AppError.new("Transaction Not Found") unless transaction
+    raise AppError.new("Invalid Auth Token") unless transaction.user == current_user || transaction.sender_address == current_user.evm_chain_address || transaction.receiver_address == current_user.evm_chain_address
+
+    transaction.update(sender_note: params[:sender_note]) if params[:sender_note].present?
+    transaction.update(receiver_note: params[:receiver_note]) if params[:receiver_note].present?
     render json: { result: "ok" }
   end
 

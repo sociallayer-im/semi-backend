@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get  "get_transactions" => "home#get_transactions"
   post "add_transaction" => "home#add_transaction"
   post "add_transaction_with_gas_credits" => "home#add_transaction_with_gas_credits"
+  post "set_transaction_note" => "home#set_transaction_note"
   get  "get_token_classes" => "home#get_token_classes"
   post "add_token_class" => "home#add_token_class"
   post "add_wallet" => "home#add_wallet"

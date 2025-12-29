@@ -312,6 +312,11 @@ Adds a transaction record for the authenticated user.
 - `status` (string, required): The status of the transaction (e.g., "success").
 - `chain` (string, required): The blockchain type (e.g., "evm").
 - `data` (string, required): Additional data related to the transaction.
+- `memo` (string, optional): A memo for the transaction.
+- `sender_note` (string, optional): A note for the sender.
+- `receiver_note` (string, optional): A note for the receiver.
+- `sender_address` (string, optional): The sender's address.
+- `receiver_address` (string, optional): The receiver's address.
 
 **Response:**
 ```json
@@ -330,6 +335,9 @@ Retrieves all transactions for the authenticated user.
 **Headers:**
 - `Authorization: Bearer <auth_token>`
 
+**Parameters:**
+- `txhashes` (string, optional): A comma-separated list of transaction hashes to filter by.
+
 **Response:**
 ```json
 {
@@ -340,6 +348,7 @@ Retrieves all transactions for the authenticated user.
       "status": "string",
       "chain": "string",
       "data": "string",
+      "memo": "string or null",
       "created_at": "string"
     }
     // ... more transactions
@@ -363,6 +372,33 @@ Adds a transaction for the authenticated user and increments their used gas cred
 - `status` (string, required): The status of the transaction (e.g., "success").
 - `chain` (string, required): The blockchain type (e.g., "evm").
 - `data` (string, required): Additional data related to the transaction.
+- `memo` (string, optional): A memo for the transaction.
+- `sender_note` (string, optional): A note for the sender.
+- `receiver_note` (string, optional): A note for the receiver.
+- `sender_address` (string, optional): The sender's address.
+- `receiver_address` (string, optional): The receiver's address.
+
+**Response:**
+```json
+{
+  "result": "ok"
+}
+```
+
+---
+
+## `POST /set_transaction_note`
+
+**Description:**
+Sets the sender or receiver note for a specific transaction. The authenticated user must be the transaction owner, the sender, or the receiver.
+
+**Headers:**
+- `Authorization: Bearer <auth_token>`
+
+**Parameters:**
+- `id` (integer, required): The ID of the transaction.
+- `sender_note` (string, optional): The new sender note.
+- `receiver_note` (string, optional): The new receiver note.
 
 **Response:**
 ```json

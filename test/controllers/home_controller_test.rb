@@ -124,9 +124,27 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
 
   test "should add transaction" do
     user = User.create(phone: "1234567890")
-    post add_transaction_url, params: { tx_hash: "0x1234567890", gas_used: 100, status: "success", chain: "evm", data: "data" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    post add_transaction_url, params: {
+      tx_hash: "0x1234567890",
+      gas_used: 100,
+      status: "success",
+      chain: "evm",
+      data: "data",
+      memo: "test memo",
+      sender_note: "s note",
+      receiver_note: "r note",
+      sender_address: "0x123",
+      receiver_address: "0x456"
+    }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
     assert JSON.parse(@response.body).key?("result")
+
+    tx = Transaction.find_by(tx_hash: "0x1234567890")
+    assert_equal "test memo", tx.memo
+    assert_equal "s note", tx.sender_note
+    assert_equal "r note", tx.receiver_note
+    assert_equal "0x123", tx.sender_address
+    assert_equal "0x456", tx.receiver_address
 
     get get_transactions_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
@@ -135,7 +153,6 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     get remaining_free_transactions_url, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
     assert JSON.parse(@response.body).key?("remaining_free_transactions")
-    p @response.body
   end
 
   test "should signin with email" do
@@ -158,9 +175,76 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     ADMIN_KEY = "1234567890"
     ENV["ADMIN_KEY"] = ADMIN_KEY
     user = User.create(phone: "1234567890")
-    post add_transaction_with_gas_credits_url, params: { id: user.id, tx_hash: "0x1234567890", gas_used: 100, status: "success", chain: "evm", data: "data" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    post add_transaction_with_gas_credits_url, params: {
+      id: user.id,
+      tx_hash: "0x1234567890",
+      gas_used: 100,
+      status: "success",
+      chain: "evm",
+      data: "data",
+      sender_note: "s note",
+      receiver_note: "r note",
+      sender_address: "0x123",
+      receiver_address: "0x456"
+    }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
     assert_response :success
     assert JSON.parse(@response.body).key?("result")
+
+    tx = Transaction.find_by(tx_hash: "0x1234567890")
+    assert_equal "s note", tx.sender_note
+    assert_equal "r note", tx.receiver_note
+    assert_equal "0x123", tx.sender_address
+    assert_equal "0x456", tx.receiver_address
+  end
+
+  test "should set transaction note as owner" do
+    user = User.create(phone: "1234567890")
+    tx = Transaction.create(user: user, tx_hash: "0xowner", status: "success")
+    post set_transaction_note_url, params: { id: tx.id, sender_note: "owner note" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert_equal "owner note", tx.reload.sender_note
+  end
+
+  test "should set transaction note as sender" do
+    user = User.create(phone: "1234567890", evm_chain_address: "0xsender")
+    other_user = User.create(phone: "0987654321")
+    tx = Transaction.create(user: other_user, tx_hash: "0xsender_tx", sender_address: "0xsender")
+    post set_transaction_note_url, params: { id: tx.id, sender_note: "sender note" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert_equal "sender note", tx.reload.sender_note
+  end
+
+  test "should set transaction note as receiver" do
+    user = User.create(phone: "1234567890", evm_chain_address: "0xreceiver")
+    other_user = User.create(phone: "0987654321")
+    tx = Transaction.create(user: other_user, tx_hash: "0xreceiver_tx", receiver_address: "0xreceiver")
+    post set_transaction_note_url, params: { id: tx.id, receiver_note: "receiver note" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    assert_equal "receiver note", tx.reload.receiver_note
+  end
+
+  test "should fail set transaction note if unauthorized" do
+    user = User.create(phone: "1234567890")
+    other_user = User.create(phone: "0987654321")
+    tx = Transaction.create(user: other_user, tx_hash: "0xunauthorized", sender_address: "0xsomeone", receiver_address: "0xelse")
+    post set_transaction_note_url, params: { id: tx.id, sender_note: "hacker note" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :bad_request
+  end
+
+  test "should get transactions with txhashes filter" do
+    user = User.create(phone: "1234567890")
+    tx1 = Transaction.create(user: user, tx_hash: "0x1", status: "success")
+    tx2 = Transaction.create(user: user, tx_hash: "0x2", status: "success")
+    tx3 = Transaction.create(user: user, tx_hash: "0x3", status: "success")
+
+    get get_transactions_url, params: { txhashes: "0x1,0x3" }, headers: { "Authorization" => "Bearer #{user.gen_auth_token}" }
+    assert_response :success
+    txs = JSON.parse(@response.body)["transactions"]
+    assert_equal 2, txs.length
+    hashes = txs.map { |t| t["tx_hash"] }
+    assert_includes hashes, "0x1"
+    assert_includes hashes, "0x3"
+    assert_not_includes hashes, "0x2"
   end
 
   test "should get token classes" do
