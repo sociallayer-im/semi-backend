@@ -152,10 +152,12 @@ class HomeController < ApplicationController
     user = current_user
     raise AppError.new("User Not Found") unless user
 
+    txes = Transaction.where(user_id: user.id).or(Transaction.where(sender_address: user.evm_chain_address)).or(Transaction.where(receiver_address: user.evm_chain_address))
+
     if params[:txhashes]
-      render json: { result: "ok", transactions: user.transactions.where(tx_hash: params[:txhashes].split(',')).as_json(only: [:id, :tx_hash, :gas_used, :status, :chain, :data, :memo, :created_at]) }
+      render json: { result: "ok", transactions: txes.where(tx_hash: params[:txhashes].split(',')).as_json(only: [:id, :tx_hash, :gas_used, :status, :chain, :data, :memo, :sender_note, :receiver_note, :receiver_address, :sender_address, :created_at]) }
     else
-      render json: { result: "ok", transactions: user.transactions.as_json(only: [:id, :tx_hash, :gas_used, :status, :chain, :data, :memo, :created_at]) }
+      render json: { result: "ok", transactions: txes.as_json(only: [:id, :tx_hash, :gas_used, :status, :chain, :data, :memo, :sender_note, :receiver_note, :receiver_address, :sender_address, :created_at]) }
     end
 
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_040018) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_29_042246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_040018) do
     t.datetime "updated_at", null: false
     t.string "wallet_id"
     t.string "memo"
+    t.string "sender_note"
+    t.string "receiver_note"
+    t.string "receiver_address"
+    t.string "sender_address"
   end
 
   create_table "users", id: :string, force: :cascade do |t|
